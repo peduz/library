@@ -23,7 +23,7 @@ public class Book {
     @Column(name = "num_pages")
     private Integer numPages;
 
-    @Column( length=1000)
+    @Column( length=1000, nullable=false)
     private String synopsis;
     
     private String author;

@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="~{fragments/header :: head}"></div>
+    <title th:text="${book.title}"></title>
+</head>
+
+<body>
+    <nav th:replace="~{fragments/navbar :: navbar('books')}"></nav>
+    <div class="container" th:object="${book}">
+        <h1 th:text="*{title}"></h1>
+        <h2 th:text="|Written by *{author}|"></h2>
+
+        <hr/>
+        <div class="row">
+            <div class="col-8">
+                <dl>
+                    <dt>Publisher</dt>
+                    <dd th:text="*{publisher}"></dd>
+                    <dt>Isbn code</dt>
+                    <dd th:text="*{isbn}"></dd>
+                    <dt>Pages</dt>
+                    <dd th:text="*{numPages}"></dd>
+                    <dt>Category</dt>
+                    <dd th:text="*{category}"></dd>
+                    <dt>Year</dt>
+                    <dd th:text="*{year}"></dd>
+                    <th:block th:unless="${#strings.isEmpty(synopsis)}">
+                        <dt>Synopsis</dt>
+                        <dd th:text="*{synopsis}"></dd>
+                    </th:block>
+
+                </dl>
+            </div>
+            
+    
+        </div>
+
+
+    </div>
+
+    <div th:replace="~{fragments/header :: bootstrapScript}"></div>
+</body>
+
+</html>

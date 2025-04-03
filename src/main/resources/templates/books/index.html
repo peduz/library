@@ -7,55 +7,78 @@
 </head>
 
 <body>
+    <nav th:replace="~{fragments/navbar :: navbar('books')}"></nav>
 
-    <div th:if="${list.isEmpty()}">
-        <p> La lista è vuota</p>
+    <div class="container">
+
+        <div class="mb-3 d-flex justify-content-between">
+            <form th:action="@{/books}" method="get">
+                <div class="input-group">
+                    <input name="keyword" th:value="${keyword}" class="form-control" 
+                    type="search" placeholder="Inserisci il titolo" 
+                    aria-label="Inserisci il titolo">
+                    <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+        </div>
+
+        <div th:if="${list.isEmpty()}">
+            <p> La lista è vuota</p>
+        </div>
+
+        <div th:unless="${list.isEmpty()}">
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            Title
+                        </th>
+                        <th>
+                            Year
+                        </th>
+                        <th>
+                            Isbn code
+                        </th>
+                        <th>
+                            Num pages
+                        </th>
+                        <th>
+                            Author
+                        </th>
+                        <th>
+                            Publisher
+                        </th>
+                        <th>
+                            <!-- spazio per il dettaglio-->
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="book : ${list}">
+                        <td th:text="${book.title}">
+                        </td>
+                        <td th:text="${book.year}">
+                        </td>
+                        <td th:text="${book.isbn}">
+                        </td>
+                        <td th:text="${book.numPages}">
+                        </td>
+                        <td th:text="${book.author}">
+                        </td>
+                        <td th:text="${book.publisher}">
+                        </td>
+                        <td>
+                            <a class="btn btn-primary" th:href="@{|/books/show/${book.id}|}">
+                                <i class="fas fa-book"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
-
-    <div th:unless="${list.isEmpty()}">
-
-        <table>
-            <thead>
-                <tr>
-                    <th>
-                        Title
-                    </th>
-                    <th>
-                        Year
-                    </th>
-                    <th>
-                        Isbn code
-                    </th>
-                    <th>
-                        Num pages
-                    </th>
-                    <th>
-                        Author
-                    </th>
-                    <th>
-                        Publisher
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="book : ${list}">
-                    <td th:text="${book.title}">
-                    </td>
-                    <td th:text="${book.year}">
-                    </td>
-                    <td th:text="${book.isbn}">
-                    </td>
-                    <td th:text="${book.numPages}">
-                    </td>
-                    <td th:text="${book.author}">
-                    </td>
-                    <td th:text="${book.publisher}">
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
     <div th:replace="~{fragments/header :: bootstrapScript}"></div>
 </body>
 
