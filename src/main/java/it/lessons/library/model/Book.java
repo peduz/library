@@ -6,6 +6,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "books")
@@ -15,8 +20,11 @@ public class Book {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
 
+    @NotBlank(message="Title is mandatory")
     private String title;
 
+    @NotBlank(message="Isbn code is mandatory")
+    @Size(min=13, max=13, message="Isbn code must be 13 chars")
     @Column(name = "isbn_code", length=13, unique=true, nullable=false)
     private String isbn;
 
@@ -26,14 +34,18 @@ public class Book {
     @Column( length=1000, nullable=false)
     private String synopsis;
     
+    @NotBlank(message="Author is mandatory")
     private String author;
 
+    @NotBlank(message="Publisher is mandatory")
     private String publisher;
 
     private String category;
 
+    @NotNull
     private Integer year;
 
+    @Min(value=0)
     private Integer numCopy;
 
     public Integer getId() {
