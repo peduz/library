@@ -1,12 +1,14 @@
 package it.lessons.library.model;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -47,6 +49,9 @@ public class Book {
 
     @Min(value=0)
     private Integer numCopy;
+
+    @OneToMany(mappedBy="book")
+    private List<Borrowing> borrowings;
 
     public Integer getId() {
         return id;
@@ -126,6 +131,14 @@ public class Book {
 
     public void setNumCopy(Integer numCopy) {
         this.numCopy = numCopy;
+    }
+
+    public List<Borrowing> getBorrowings() {
+        return borrowings;
+    }
+
+    public void setBorrowings(List<Borrowing> borrowings) {
+        this.borrowings = borrowings;
     }
 
     
