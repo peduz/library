@@ -1,6 +1,5 @@
 package it.lessons.library.controller;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,40 +17,31 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import it.lessons.library.model.Book;
 import it.lessons.library.model.Borrowing;
-import it.lessons.library.repository.BookRepository;
-import it.lessons.library.repository.BorrowingRepository;
+import it.lessons.library.service.BookService;
+import it.lessons.library.service.CategoryService;
 import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/books")
 public class BookController {
 
-    private BookRepository bookRepository;
-
-    private BorrowingRepository borrowingRepository;
     @Autowired
-    public BookController(BookRepository bookRepository, BorrowingRepository borrowingRepository) {
-        this.bookRepository = bookRepository;
-        this.borrowingRepository = borrowingRepository;
-    }
+    private BookService service;
+
+    @Autowired
+    private CategoryService catService;
 
     @GetMapping
     public String index(Model model, @RequestParam(name = "keyword", required = false) String title) {
-        List<Book> result;
-        if (title != null && !title.isBlank()) {
-            result = bookRepository.findByTitleContainingIgnoreCase(title);
-        } else {
-            result = bookRepository.findAll();
-        }
-        model.addAttribute("list", result);
+        model.addAttribute("list", service.findBookList(title));
         return "books/index";
     }
 
     @GetMapping("/show/{id}")
     public String show(@PathVariable("id") Integer id, Model model) {
-        Optional<Book> optLibro = bookRepository.findById(id);
+        Optional<Book> optLibro = service.findBookById(id);
         if (optLibro.isPresent()) {
-            model.addAttribute("book", bookRepository.findById(id).get());
+            model.addAttribute("book", optLibro.get());
             return "/books/show";
         }
 
@@ -66,6 +56,7 @@ public class BookController {
     @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("book", new Book());
+        model.addAttribute("categoryList", catService.findAllCategories());
         return "/books/create";
     }
 
@@ -76,11 +67,12 @@ public class BookController {
             RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
+            model.addAttribute("categoryList", catService.findAllCategories());
             return "/books/create";
         }
 
         //Logica di salvataggio
-        bookRepository.save(formBook);
+        service.create(formBook);
 
         redirectAttributes.addFlashAttribute("successMessage", "Book created!");
         return "redirect:/books";
@@ -89,7 +81,8 @@ public class BookController {
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Integer id, Model model) {
 
-        model.addAttribute("book", bookRepository.findById(id).get());
+        model.addAttribute("book", service.findBookById(id).get());
+        model.addAttribute("categoryList", catService.findAllCategories());
 
         return "/books/edit";
     }
@@ -100,7 +93,7 @@ public class BookController {
             BindingResult bindingResult,
             Model model) {
         //ISBN: 9780553808049
-        Optional<Book> optBook = bookRepository.findById(formBook.getId());
+        Optional<Book> optBook = service.findBookById(formBook.getId());
 
         if (optBook.isPresent()) {
             Book dbBook = optBook.get();
@@ -113,19 +106,14 @@ public class BookController {
         if (bindingResult.hasErrors()) {
             return "/books/edit";
         }
-        bookRepository.save(formBook);
+        service.create(formBook);
 
         return "redirect:/books";
     }
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") Integer id) {
-
-        Book book = bookRepository.findById(id).get();
-        for (Borrowing b : book.getBorrowings()) {
-            borrowingRepository.deleteById(b.getId());
-        }
-        bookRepository.deleteById(id);
+        service.deleteById(id);
 
         return "redirect:/books";
     }
@@ -133,7 +121,7 @@ public class BookController {
     @GetMapping("/{id}/borrow")
     public String borrow(@PathVariable Integer id, Model model) {
         Borrowing borrow = new Borrowing();
-        borrow.setBook(bookRepository.findById(id).get());
+        borrow.setBook(service.findBookById(id).get());
 
         model.addAttribute("borrow", borrow);
         model.addAttribute("editMode", false);

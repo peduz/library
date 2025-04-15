@@ -85,11 +85,6 @@
                                 </textarea>
                         </div>
 
-                        <div class="col-12">
-                            <label class="form-label">Category</label>
-                            <input type="text" class="form-control" id="category" th:field="*{category}"
-                                th:errorClass="is-invalid">
-                        </div>
 
                         <div class="col-12">
                             <label class="form-label">Number of pages</label>
@@ -102,7 +97,7 @@
                         </div>
                         <!-- FINE CAMPI -->
 
-                    <!-- Custom error -->
+                        <!-- Custom error -->
                         <ul>
                             <li th:each="err : ${#fields.allErrors()}" th:text="${err}" class="text-danger"></li>
                         </ul>
@@ -119,6 +114,15 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- categories -->
+                <div class="col-4">
+                    <h4>Categories</h4>
+                    <div class="form-check" th:each="cat : ${categoryList}">
+                        <input class="form-check-input" type="checkbox" th:id="${cat.id}" th:value="${cat.id}" th:field="*{categories}"> 
+                        <label class="form-check-label" th:for="${cat.id}" th:text="${cat.category}"></label>
+                    </div>
+                 </div>
             </div>
         </form>
 

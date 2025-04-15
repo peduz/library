@@ -22,8 +22,6 @@
                     <dd th:text="*{isbn}"></dd>
                     <dt>Pages</dt>
                     <dd th:text="*{numPages}"></dd>
-                    <dt>Category</dt>
-                    <dd th:text="*{category}"></dd>
                     <dt>Year</dt>
                     <dd th:text="*{year}"></dd>
                     <dt>Copies</dt>
@@ -34,6 +32,12 @@
                     </th:block>
 
                 </dl>
+            </div>
+            <div class="col-4">
+                <h3>Categories</h3>
+                <ul>
+                    <li th:each="cat : *{categories}" th:text="${cat.category}"></li>
+                </ul>
             </div>
             <div class="row">
                 <div class="col-12">
