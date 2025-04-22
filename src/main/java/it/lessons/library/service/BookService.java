@@ -50,6 +50,16 @@ public class BookService {
         return bookRepository.save(book);
     }
 
+    public Book update(Book book) {
+        Optional<Book> optBook = bookRepository.findById(book.getId());
+
+        if(optBook.isEmpty()) {
+            throw new IllegalArgumentException("Impossibile aggiornare il libro senza l'id");
+        }
+
+        return bookRepository.save(book);
+    }
+
     public void deleteById(Integer id) {
         
         Book book = bookRepository.findById(id).get();

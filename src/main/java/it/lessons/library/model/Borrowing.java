@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,6 +32,7 @@ public class Borrowing {
     
     @ManyToOne
     @JoinColumn(name = "book_id", nullable = false)
+    @JsonBackReference
     private Book book;
 
     public Long getId() {
