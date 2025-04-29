@@ -16,6 +16,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         </th:block>
+        <span th:text="|Ciao ${username}|"></span>
+        <h1>Books</h1>
+
         <div class="mb-3 d-flex justify-content-between">
             <a class="btn btn-success" th:href="@{/books/create}"><svg xmlns="http://www.w3.org/2000/svg" width="16"
                     height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
@@ -65,10 +68,10 @@
                         <th>
                             <!-- spazio per il dettaglio-->
                         </th>
-                        <th>
+                        <th sec:authorize="hasAuthority('ADMIN')">
                             <!-- spazio per la modifica-->
                         </th>
-                        <th>
+                        <th sec:authorize="hasAuthority('ADMIN')">
                             <!-- spazio per la cancellazione-->
                         </th>
                     </tr>
@@ -87,6 +90,7 @@
                         </td>
                         <td th:text="${book.publisher}">
                         </td>
+                        <!-- DETTAGLIO LIBRO -->
                         <td>
                             <a class="btn btn-primary" th:href="@{|/books/show/${book.id}|}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -96,7 +100,8 @@
                                 </svg>
                             </a>
                         </td>
-                        <td>
+                        <!-- MODIFICA LIBRO -->
+                        <td sec:authorize="hasAuthority('ADMIN')">
                             <a class="btn btn-primary" th:href="@{|/books/edit/${book.id}|}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                     class="bi bi-pencil" viewBox="0 0 16 16">
@@ -105,7 +110,8 @@
                                 </svg>
                             </a>
                         </td>
-                        <td>
+                        <!-- CANCELLAZIONE LIBRO -->
+                        <td sec:authorize="hasAuthority('ADMIN')">
                             <form action="#" th:action="@{'/books/delete/{id}'(id=${book.id})}" method="post">
                                 <button class="btn btn-danger" type="submit" id="submitButton" onclick="return confirm('Are you sure?')">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">

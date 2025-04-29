@@ -1,9 +1,11 @@
 package it.lessons.library.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
 
 import it.lessons.library.model.Book;
@@ -31,18 +33,29 @@ public class BookService {
 
 
     public List<Book> findBookList(String title) {
-        List<Book> result;
-         if (title != null && !title.isBlank()) {
-            result = bookRepository.findByTitleContainingIgnoreCase(title);
-        } else {
-            result = bookRepository.findAll();
+        List<Book> result = new ArrayList<>();
+
+        try {
+            if (title != null && !title.isBlank()) {
+               result = bookRepository.findByTitleContainingIgnoreCase(title);
+           } else {
+               result = bookRepository.findAll();
+           }
+        } catch(Exception e) {
+            System.err.println("Errore durante la lettura dei dati dei libri: " + e);
         }
+
         return result;
     }
 
 
     public Optional<Book> findBookById(Integer id) {
-        return bookRepository.findById(id);
+        try {
+            return bookRepository.findById(id);
+        } catch(IllegalArgumentException | InvalidDataAccessApiUsageException e) {
+            System.err.println("Errore durante la lettura del libro con id null" + e);
+            return null;
+        }
     }
 
 

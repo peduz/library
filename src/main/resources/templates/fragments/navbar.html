@@ -18,15 +18,20 @@
                         <a class="nav-link" th:classAppend="${current == 'books'} ? active : not-active" 
                         aria-current="page" th:href="@{/books}">Books</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
                         <a class="nav-link" th:classAppend="${current == 'categories'} ? active : not-active" 
                         aria-current="page" th:href="@{/categories}">Categories</a>
                     </li>
                 </ul>
             </div>
+            <div class="text-light">
+                Logged user: <span sec:authentication="name"></span>
+            
+                Roles: <span sec:authentication="principal.authorities"></span>
+                <a class="btn btn-primary" href="/logout"> LOGOUT </a>
+            </div>
         </div>
     </nav>
-
     <div th:replace="~{fragments/header :: bootstrapScript}"></div>
 </body>
 

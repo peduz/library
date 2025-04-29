@@ -3,6 +3,7 @@ package it.lessons.library.controller;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,15 +32,21 @@ public class BookController {
     @Autowired
     private CategoryService catService;
 
+
     @GetMapping
-    public String index(Model model, @RequestParam(name = "keyword", required = false) String title) {
+    public String index(Authentication authentication, Model model, @RequestParam(name = "keyword", required = false) String title) {
         model.addAttribute("list", service.findBookList(title));
+        model.addAttribute("username", authentication.getName());
         return "books/index";
     }
 
     @GetMapping("/show/{id}")
     public String show(@PathVariable("id") Integer id, Model model) {
         Optional<Book> optLibro = service.findBookById(id);
+        if(optLibro == null) {
+            model.addAttribute("errorMessage", "Errore: id non valido");
+            return "error";
+        }
         if (optLibro.isPresent()) {
             model.addAttribute("book", optLibro.get());
             return "/books/show";
